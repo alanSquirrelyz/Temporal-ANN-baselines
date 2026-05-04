@@ -4,7 +4,7 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 patch_dir="${repo_root}/scripts/temporal_ann_baselines/patches"
-python_bin="${PYTHON_BIN:-python3}"
+source "${repo_root}/scripts/temporal_ann_baselines/config.sh"
 rangefiltered_repo="${RANGEFILTERED_REPO:-${repo_root}/RangeFilteredANN}"
 unify_repo="${UNIFY_REPO:-${repo_root}/UNIFY}"
 

@@ -8,7 +8,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/../.." && pwd)"
 source "${script_dir}/datasets.sh"
 
-python_bin="${PYTHON_BIN:-python3}"
+
 
 mkdir -p "${artifact_root}" "${sorted_root}" "${result_root}" "${log_root}"
 
