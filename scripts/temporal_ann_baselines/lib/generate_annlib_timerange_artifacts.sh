@@ -2,16 +2,16 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-annlib_test_dir="${ANNLIB_TEST_DIR:-/home/zwan/ANNlib/test}"
-artifact_root="${ARTIFACT_ROOT:-${repo_root}/artifacts/point_timerange_ann}"
+annlib_test_dir="${ANNLIB_TEST_DIR:?ANNLIB_TEST_DIR must be set}"
+artifact_root="${ARTIFACT_ROOT:?ARTIFACT_ROOT must be set}"
 
 if [[ $# -gt 0 && "${1:-}" == "--help" ]]; then
   cat <<'EOF'
 Generate point-timestamp, query-range, and ground-truth artifacts with ANNlib.
 
 Environment variables:
-  ANNLIB_TEST_DIR   ANNlib test directory. Default: /home/zwan/ANNlib/test
-  ARTIFACT_ROOT     Output root. Default: /home/zwan/autoresearch/artifacts/point_timerange_ann
+  ANNLIB_TEST_DIR   ANNlib test directory (e.g. /home/zwan/ANNlib/test)
+  ARTIFACT_ROOT     Output root for generated artifacts
   DATASET           ANNlib dataset spec, e.g. ./ANNdataset/Yandex-DEEP/base.1B.fbin:fbin
   DATASET_TAG       Dataset tag used under ARTIFACT_ROOT
   TYPE              uint8 | int8 | float

@@ -27,7 +27,7 @@ for entry in "${DATASETS[@]}"; do
   K="${k}" \
   RANGES_STR="${ranges_str}" \
   ARTIFACT_ROOT="${artifact_root}" \
-  ANNLIB_TEST_DIR="${annlib_test_dir}" \
+  ANNLIB_TEST_DIR="${annlib_dir}/test" \
   "${script_dir}/lib/generate_annlib_timerange_artifacts.sh"
 
   echo "[${tag}] preparing sorted inputs"
