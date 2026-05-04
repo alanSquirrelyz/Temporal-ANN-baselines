@@ -54,7 +54,7 @@ echo "Building UNIFY Python bindings..."
   cd "${unify_repo}/python_bindings"
   export pybind11_DIR="${pybind11_cmakedir}"
   export CMAKE_PREFIX_PATH="${pybind11_cmakedir}:${CMAKE_PREFIX_PATH:-}"
-  "${python_bin}" -m pip install .
+  "${python_bin}" -m pip install --no-build-isolation .
 )
 
 # --- C++ binaries ---
