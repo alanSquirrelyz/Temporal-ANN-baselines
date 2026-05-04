@@ -61,13 +61,13 @@ echo "Building UNIFY Python bindings..."
 
 build_cpp() {
   local repo_dir="$1"
+  local build_dir="${repo_dir}/build"
   echo "Building ${repo_dir##*/}..."
-  mkdir -p "${repo_dir}/build"
-  (
-    cd "${repo_dir}/build"
-    cmake ..
-    make -j"$(nproc)"
-  )
+  mkdir -p "${build_dir}"
+  rm -f "${build_dir}/CMakeCache.txt"
+  rm -rf "${build_dir}/CMakeFiles"
+  cmake -S "${repo_dir}" -B "${build_dir}" -DCMAKE_BUILD_TYPE=Release
+  cmake --build "${build_dir}" --parallel "$(nproc)"
 }
 
 build_cpp "${repo_root}/Dynamic-Range-Filtering-ANNS"

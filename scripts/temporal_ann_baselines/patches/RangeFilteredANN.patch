@@ -162,3 +162,31 @@ index 579a1a6..06b71ed 100644
  
  template <typename T, typename Point>
  inline void add_variant(py::module_ &m, const Variant &variant) {
+diff --git a/setup.py b/setup.py
+index 3ca1d45..e001982 100644
+--- a/setup.py
++++ b/setup.py
+@@ -34,7 +34,11 @@ class CMakeBuild(build_ext):
+         # Using this requires trailing slash for auto-detection & inclusion of
+         # auxiliary "native" libs
+ 
+-        debug = int(os.environ.get("DEBUG", 0)) if self.debug is None else self.debug
++        debug_value = os.environ.get("DEBUG", 0) if self.debug is None else self.debug
++        if isinstance(debug_value, str):
++            debug = debug_value.lower() in {"1", "true", "yes", "on", "debug"}
++        else:
++            debug = bool(debug_value)
+         cfg = "Debug" if debug else "Release"
+         # cfg = "Debug"
+ 
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10800ee..922f918 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,3 +32,7 @@ set(CC_SOURCES
+ pybind11_add_module(window_ann  ${CC_SOURCES})
+ target_compile_options(window_ann PRIVATE ${COMPILE_OPTIONS})
+ 
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
++    target_link_libraries(window_ann PRIVATE stdc++fs)
++endif()

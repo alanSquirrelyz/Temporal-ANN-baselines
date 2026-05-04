@@ -1,14 +1,21 @@
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index 730ece3..3fb0948 100644
+index 730ece3..e0fcdc0 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -1,3 +1,4 @@
+@@ -1,3 +1,11 @@
  add_executable(buildindex buildindex.cpp)
  add_executable(search search.cpp)
 -add_executable(search_multi search_multi.cpp)
 \ No newline at end of file
 +add_executable(search_annlib search_annlib.cpp)
 +add_executable(search_multi search_multi.cpp)
++
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
++    target_link_libraries(buildindex stdc++fs)
++    target_link_libraries(search stdc++fs)
++    target_link_libraries(search_annlib stdc++fs)
++    target_link_libraries(search_multi stdc++fs)
++endif()
 diff --git a/tests/search_annlib.cpp b/tests/search_annlib.cpp
 new file mode 100644
 index 0000000..27ef563

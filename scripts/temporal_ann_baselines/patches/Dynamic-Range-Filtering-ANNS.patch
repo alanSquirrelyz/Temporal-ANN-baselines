@@ -306,3 +306,19 @@ index 0000000..801d7f3
 +        return 1;
 +    }
 +}
++
+diff --git a/src/utils/CMakeLists.txt b/src/utils/CMakeLists.txt
+index 547d03b..d0fa0fe 100644
+--- a/src/utils/CMakeLists.txt
++++ b/src/utils/CMakeLists.txt
+@@ -15,4 +15,8 @@ add_library(UTIL STATIC ${native_srcs} )
+ 
+ target_compile_options(UTIL PRIVATE -Wall ${OpenMP_CXX_FLAGS})
+ target_link_libraries(UTIL ${OpenMP_CXX_FLAGS})
+-target_link_libraries(UTIL OpenMP::OpenMP_CXX)
+\ No newline at end of file
++target_link_libraries(UTIL OpenMP::OpenMP_CXX)
++
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
++    target_link_libraries(UTIL stdc++fs)
++endif()

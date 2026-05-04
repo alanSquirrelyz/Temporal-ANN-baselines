@@ -94,12 +94,13 @@ def run_batch(batch_search, queries: np.ndarray, query_ranges: np.ndarray, empty
     return ids
 
 
-def build_index(builder, cache_path: Path | None = None):
+def build_index(builder, cache_path: Path | None = None, preprocess_seconds: float = 0.0):
     gc.collect()
     rss_before = process_rss_bytes()
     start = time.perf_counter()
     index = builder()
-    build_seconds = time.perf_counter() - start
+    index_build_seconds = time.perf_counter() - start
+    build_seconds = preprocess_seconds + index_build_seconds
     gc.collect()
     rss_after = process_rss_bytes()
     rss_delta_bytes = max(0, rss_after - rss_before)
@@ -112,6 +113,8 @@ def build_index(builder, cache_path: Path | None = None):
         space_usage_source = "rss_delta_bytes"
     return index, {
         "build_seconds": f"{build_seconds:.6f}",
+        "index_build_seconds": f"{index_build_seconds:.6f}",
+        "preprocess_seconds": f"{preprocess_seconds:.6f}",
         "space_usage_bytes": int(space_usage_bytes),
         "space_usage_source": space_usage_source,
         "rss_delta_bytes": int(rss_delta_bytes),
@@ -146,6 +149,12 @@ def main() -> int:
     parser.add_argument("--super-shift-factor", type=float, default=0.5)
     parser.add_argument("--postfiltering-max-beam", type=int, default=10000)
     parser.add_argument("--min-query-to-bucket-ratio", type=float, default=0.05)
+    parser.add_argument(
+        "--timestamp-mode",
+        choices=["raw", "rank"],
+        default="raw",
+        help="Use raw timestamp filters, or compress timestamps/ranges to dense ranks before indexing.",
+    )
     parser.add_argument("--index-cache-dir", type=Path, default=BASELINES_ROOT / "cache" / "rangefilteredann")
     parser.add_argument("--output", type=Path, default=BASELINES_ROOT / "results" / "rangefilteredann_timerange.tsv")
     args = parser.parse_args()
@@ -153,7 +162,6 @@ def main() -> int:
     num_threads = args.threads if args.threads is not None else os.cpu_count() or 1
     num_threads = max(1, int(num_threads))
     os.environ["PARLAY_NUM_THREADS"] = str(num_threads)
-    os.environ["OMP_NUM_THREADS"] = str(num_threads)
 
     wp = load_wrapper(args.rangefiltered_repo)
     args.index_cache_dir.mkdir(parents=True, exist_ok=True)
@@ -173,11 +181,23 @@ def main() -> int:
     base = ensure_c_contiguous(base)
     queries = ensure_c_contiguous(queries)
 
-    compressed = compress_scalars_and_ranges(
-        artifacts.point_timestamps[: base.shape[0]],
-        artifacts.query_ranges,
-    )
-    filter_values = compressed.scalars.astype(np.float32)
+    preprocess_start = time.perf_counter()
+    if args.timestamp_mode == "rank":
+        compressed = compress_scalars_and_ranges(
+            artifacts.point_timestamps[: base.shape[0]],
+            artifacts.query_ranges,
+        )
+        filter_values = compressed.scalars.astype(np.float32)
+        query_ranges = compressed.query_ranges
+        empty_masks = compressed.empty_masks
+    else:
+        filter_values = artifacts.point_timestamps[: base.shape[0]].astype(np.float32)
+        query_ranges = {width: ranges.astype(np.float32) for width, ranges in artifacts.query_ranges.items()}
+        empty_masks = {
+            width: np.zeros(ranges.shape[0], dtype=bool)
+            for width, ranges in artifacts.query_ranges.items()
+        }
+    preprocess_seconds = time.perf_counter() - preprocess_start
 
     dtype_name = dtype_token(base)
     rows: list[dict[str, object]] = []
@@ -187,27 +207,31 @@ def main() -> int:
     if any(m in args.methods for m in {"prefilter"}):
         built_indexes["prefilter"], build_metrics["prefilter"] = build_index(
             lambda: build_prefilter(wp, metric, dtype_name, base, filter_values),
+            preprocess_seconds=preprocess_seconds,
         )
     if any(m in args.methods for m in {"postfilter"}):
         built_indexes["postfilter"], build_metrics["postfilter"] = build_index(
             lambda: build_postfilter(wp, metric, dtype_name, base, filter_values, args),
             args.index_cache_dir / "postfilter",
+            preprocess_seconds=preprocess_seconds,
         )
     if any(m in args.methods for m in {"vamana_tree", "optimized_postfilter", "smart_combined", "three_split"}):
         built_indexes["tree"], build_metrics["tree"] = build_index(
             lambda: build_tree(wp, metric, dtype_name, base, filter_values, args),
             args.index_cache_dir / "tree",
+            preprocess_seconds=preprocess_seconds,
         )
     if any(m in args.methods for m in {"super_opt_postfilter"}):
         built_indexes["super"], build_metrics["super"] = build_index(
             lambda: build_super_postfilter(wp, metric, dtype_name, base, filter_values, args),
             args.index_cache_dir / "super-postfilter",
+            preprocess_seconds=preprocess_seconds,
         )
 
     for range_width in sorted(artifacts.query_ranges):
         gt = artifacts.groundtruth[range_width]
-        mapped_ranges = compressed.query_ranges[range_width]
-        empty_mask = compressed.empty_masks[range_width]
+        mapped_ranges = query_ranges[range_width]
+        empty_mask = empty_masks[range_width]
         valid_queries = int(np.count_nonzero(~empty_mask))
 
         if "prefilter" in args.methods:
