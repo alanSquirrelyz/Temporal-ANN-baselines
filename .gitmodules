@@ -1,18 +1,18 @@
 [submodule "RangeFilteredANN"]
 	path = RangeFilteredANN
-	url = git@github.com:JoshEngels/RangeFilteredANN.git
+	url = https://github.com/JoshEngels/RangeFilteredANN.git
 [submodule "UNIFY"]
 	path = UNIFY
-	url = git@github.com:sjtu-dbgroup/UNIFY.git
+	url = https://github.com/sjtu-dbgroup/UNIFY.git
 [submodule "Dynamic-Range-Filtering-ANNS"]
 	path = Dynamic-Range-Filtering-ANNS
-	url = git@github.com:rutgers-db/Dynamic-Range-Filtering-ANNS.git
+	url = https://github.com/rutgers-db/Dynamic-Range-Filtering-ANNS.git
 [submodule "SeRF"]
 	path = SeRF
-	url = git@github.com:rutgers-db/SeRF.git
+	url = https://github.com/rutgers-db/SeRF.git
 [submodule "iRangeGraph"]
 	path = iRangeGraph
-	url = git@github.com:YuexuanXu7/iRangeGraph.git
+	url = https://github.com/YuexuanXu7/iRangeGraph.git
 [submodule "nsg"]
 	path = nsg
-	url = git@github.com:ZJULearning/nsg.git
+	url = https://github.com/ZJULearning/nsg.git
