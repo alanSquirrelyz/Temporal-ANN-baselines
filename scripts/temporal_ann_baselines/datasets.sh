@@ -12,11 +12,13 @@ source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 #   dist       — L2 | angular
 #   max_points — number of base vectors to load
 # ---------------------------------------------------------------------------
+  # "bigann1M|${anndataset_root}/sift/bigann.base.1B.u8bin:u8bin|uint8|L2|1000000"
+  # "deep1M_yandex|${anndataset_root}/yandex_deep/learn.350M.fbin:fbin|float|L2|1000000"
 DATASETS=(
-  "bigann1M|${anndataset_root}/sift/bigann.base.1B.u8bin:u8bin|uint8|L2|1000000"
-  "deep1M_yandex|${anndataset_root}/yandex_deep/learn.350M.fbin:fbin|float|L2|1000000"
-  # "openai1M|${anndataset_root}/openai/openai_large_5m/base.fbin:fbin|float|angular|1000000"
-  # "cohere1M|${anndataset_root}/cohere/cohere_large_10m/base.fbin:fbin|float|angular|1000000"
+  "bigann1M|${anndataset_root}/BIGANN/base.1B.u8bin:u8bin|uint8|L2|1000000"
+  "deep1M_yandex|${anndataset_root}/Yandex-DEEP/base.1B.fbin:fbin|float|L2|1000000"
+  "openai1M|${anndataset_root}/openai/openai_large_5m/base.fbin:fbin|float|angular|1000000"
+  "cohere1M|${anndataset_root}/cohere/cohere_large_10m/base.fbin:fbin|float|angular|1000000"
 )
 
 # ---------------------------------------------------------------------------
