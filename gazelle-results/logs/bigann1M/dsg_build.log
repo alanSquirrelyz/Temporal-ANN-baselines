@@ -1,0 +1,4 @@
+Load vecs from: /data/zwan018/TimeStampANN/baseline_cache/sorted_timerange/bigann1M/base_sorted.bin
+# of vecs: 1000000
+[DSG][static] dataset=annlib N=1000000 M=16 ef_construction=80 ef_max=300 alpha=1
+[DSG] Temporary HNSW built in 201.413 seconds.

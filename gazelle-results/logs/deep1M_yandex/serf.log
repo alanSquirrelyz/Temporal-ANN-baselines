@@ -1,0 +1,10 @@
+Save result to :../exp/search/annlib--SeRF_2D-annlib-1000000.csv
+Building Index using IndexSegmentGraph2D
+Max. forward batch nn #: 0
+Avg. forward nn #: 19.9225
+Avg. forward batch #: 2.15243
+Max. reverse nn #: 208
+Avg. reverse nn #: 19.9225
+Avg. reverse batch #: 1
+Avg. delta nn #: 39.845
+Total write 50454740 (int) to file /data/zwan018/TimeStampANN/baseline_cache/sorted_timerange/deep1M_yandex/serf_k16_efcon80_efmax300.bin

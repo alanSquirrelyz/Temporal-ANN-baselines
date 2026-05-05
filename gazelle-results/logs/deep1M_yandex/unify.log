@@ -1,0 +1,5 @@
+init index
+Adding 1000000 vectors, 1000000 scalars.
+add items done
+Using 224 query workers for UNIFY benchmark
+wrote 15 rows to /home/zwan018/Temporal-ANN-baselines/results/deep1M_yandex_unify.tsv
