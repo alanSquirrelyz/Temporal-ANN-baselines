@@ -6,11 +6,10 @@
 # cache_root       Where generated index/cache files are stored.
 # result_root      Where benchmark result TSVs are written.
 
-# python_bin="${PYTHON_BIN:-/home/zwan018/autoresearch/.venv312/bin/python}"
-python_bin="python3"
+python_bin="${PYTHON_BIN:-/home/yliu908/.venv312/bin/python}"
 
-anndataset_root="${ANNDATASET_ROOT:-/home/zwan018/ANNlib/test/ANNdataset}"
-annlib_test_dir="${ANNLIB_TEST_DIR:-/home/zwan018/ANNlib/test}"
-artifact_root="${ARTIFACT_ROOT:-/data/zwan018/TimeStampANN/point_timerange_ann}"
-cache_root="${CACHE_ROOT:-/data/zwan018/TimeStampANN/baseline_cache}"
+anndataset_root="${ANNDATASET_ROOT:-/data/zshen055/ANN}"
+annlib_test_dir="${ANNLIB_TEST_DIR:-/home/yliu908/Dev/Temporal-ANN-baselines/ANNlib/test}"
+artifact_root="${ARTIFACT_ROOT:-/data/yliu908/temporal-ANN/point_timerange_ann}"
+cache_root="${CACHE_ROOT:-/data/yliu908/temporal-ANN/baseline_cache}"
 result_root="${RESULT_ROOT:-${repo_root}/results}"

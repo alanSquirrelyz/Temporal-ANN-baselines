@@ -16,3 +16,6 @@
 [submodule "nsg"]
 	path = nsg
 	url = https://github.com/ZJULearning/nsg.git
+[submodule "ANNlib"]
+	path = ANNlib
+	url = git@github.com:ucrparlay/ANNlib.git
