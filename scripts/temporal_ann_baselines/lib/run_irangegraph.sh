@@ -20,14 +20,15 @@ for entry in "${DATASETS[@]}"; do
   mkdir -p "${index_dir}" "${log_root}/${tag}"
 
   echo "[${tag}] irangegraph build start"
-  /usr/bin/time -f "%e" -o "${time_file}" \
-    "${repo_root}/iRangeGraph/build/tests/buildindex" \
+  build_start=${SECONDS}
+  "${repo_root}/iRangeGraph/build/tests/buildindex" \
       --data_path "${sorted_dir}/base_sorted.bin" \
       --index_file "${index_path}" \
       --M 16 \
       --ef_construction 80 \
       --threads "$(nproc)" \
       &> "${log_root}/${tag}/irangegraph_build.log"
+  echo "$((SECONDS - build_start))" > "${time_file}"
 
   build_seconds="$(<"${time_file}")"
   index_bytes="$(stat -c%s "${index_path}")"

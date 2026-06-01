@@ -20,8 +20,8 @@ for entry in "${DATASETS[@]}"; do
   mkdir -p "${index_dir}" "${log_root}/${tag}"
 
   echo "[${tag}] dsg build start"
-  /usr/bin/time -f "%e" -o "${time_file}" \
-    "${repo_root}/Dynamic-Range-Filtering-ANNS/build/apps/build_static_index" \
+  build_start=${SECONDS}
+  "${repo_root}/Dynamic-Range-Filtering-ANNS/build/apps/build_static_index" \
       -dataset annlib \
       -N "${max_points}" \
       -dataset_path "${sorted_dir}/base_sorted.bin" \
@@ -34,6 +34,7 @@ for entry in "${DATASETS[@]}"; do
       -ef_max 300 \
       -alpha 1.0 \
       &> "${log_root}/${tag}/dsg_build.log"
+  echo "$((SECONDS - build_start))" > "${time_file}"
 
   build_seconds="$(<"${time_file}")"
   index_bytes="$(stat -c%s "${index_path}")"
